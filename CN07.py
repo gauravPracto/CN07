@@ -48,7 +48,6 @@ class CardValidator:
     '''
     
     def isValidStart(self,cardDigit):
-
         if cardDigit[0]==4 or cardDigit[0]==5 or cardDigit[0]==6 or cardDigit[0]==3 or cardDigit[:2]==37:
             return True
         else:
@@ -76,10 +75,13 @@ class CardValidator:
     def getCardDigits(self,cardNumber):
         cardDigits = []
         # card digit list contain card number
-        for x in str(cardNumber):
-            if x.isdigit():
-                cardDigits.append(int(x))
-        return cardDigits
+        try:
+            for x in str(cardNumber):
+                if x.isdigit():
+                    cardDigits.append(int(x))
+            return cardDigits
+        except:
+            return []
     
     
     
@@ -101,6 +103,8 @@ class CardValidator:
     
 
     def digitSum(self,number):
+        if type(number)!=int:
+            return -1
         accumulator = 0
         while number!=0:
             accumulator+=number%10
@@ -138,14 +142,17 @@ class CardValidator:
             1a. get every second number from last and double it , if greater then 9 add it digit wise
             1b. non every second is just added
             2. sum them both
-            3. modulas by 10 if 0 return True else False
+            3. modolas by 10 if 0 return True else False
         """
 
         for x in cardDigits[::-1]:
             if not oddEvenPlace%2:
                 oddPlacesSum+=x
             else:
-                evenPlacesSum+=self.digitSum(2*x)
+                tempDigitSum = self.digitSum(2*x)
+                if tempDigitSum==-1:
+                    return False
+                evenPlacesSum+=tempDigitSum
             oddEvenPlace+=1
 
         return  not (evenPlacesSum+oddPlacesSum)%10
@@ -204,7 +211,12 @@ class CardValidator:
 
     def isValidName(self,holderName):
         compileReg = re.compile(r'^([a-z]+)( [a-z]+)*( [a-z]+)*$', re.IGNORECASE)
-        isMatched = re.fullmatch(compileReg,holderName).string==holderName
+        matched = re.fullmatch(compileReg,holderName)
+        isMatched = False
+        if matched!=None:
+            isMatched = re.fullmatch(compileReg,holderName).string==holderName
+        else:
+            return False
         if isMatched:
             return True
         else:
@@ -253,6 +265,8 @@ class CardValidator:
     '''
     
     def isValidDate(self,date):
+        if type(date)!=str:
+            return False
         delimiter = date.count('/')
 
         if delimiter!=2:
