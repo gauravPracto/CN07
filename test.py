@@ -46,5 +46,12 @@ def test_method():
     assert cn07Object.isValidDate("220188")==False
     # invalid backslash
     assert cn07Object.isValidDate("22-//0188")==False
-    #  
+    #  valid date
+    assert cn07Object.isValidDate("22/09/2022")==True
 
+    # validateCard for current obj
+    # correct
+    assert cn07Object.validateCard()==True
+    # wrong
+    cn07ObjectWrong = CN07.CardValidator("37ee8282246310005","Gaurav 123","123","22/09/2022")
+    assert cn07ObjectWrong.validateCard()==False
